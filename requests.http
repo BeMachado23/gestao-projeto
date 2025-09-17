@@ -1,0 +1,46 @@
+### 1. Criar um novo aluno
+# @name criarAluno
+POST http://localhost:8080/alunos
+Content-Type: application/json
+
+{
+  "nome": "Bernardo Machado",
+  "email": "bernardo_machado1@email.com"
+}
+> {% client.global.set("alunoId", response.body.id); %}
+
+### 2. Criar um novo projeto
+POST http://localhost:8080/projeto
+Content-Type: application/json
+
+{
+  "titulo": "Projeto de Teste de Associação",
+  "descricao": "teste para adicionar o Bernardo ao projeto."
+}
+> {% client.global.set("projetoId", response.body.id); %}
+
+### 3. Adicionar o aluno criado ao projeto criado
+POST http://localhost:8080/projeto/{{projetoId}}/alunos
+Content-Type: application/json
+
+[
+  "{{alunoId}}"
+]
+
+### 4.Criar tarefa
+POST http://localhost:8080/projeto/{{projetoId}}/tarefa
+Content-Type: application/json
+
+{
+    "titulo": "Criar API REST",
+    "descricao": "Usar java para criar uma api em REST",
+    "prazo": "2025-09-16",
+    "status": "TODO"
+}
+> {% client.global.set("tarefaId", response.body.id); %}
+
+### 5.Listar todos os projetos
+GET http://localhost:8080/projeto
+
+### 6. Listar as tarefas de um projeto especifico
+GET http://localhost:8080/projeto/{{projetoId}}/tarefa
