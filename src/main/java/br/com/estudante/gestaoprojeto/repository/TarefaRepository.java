@@ -1,5 +1,6 @@
 package br.com.estudante.gestaoprojeto.repository;
 
+import br.com.estudante.gestaoprojeto.model.Status;
 import br.com.estudante.gestaoprojeto.model.Tarefa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import java.util.UUID;
 public interface TarefaRepository extends JpaRepository<Tarefa, UUID> {
 
     List<Tarefa> findByProjetoId(UUID projetoId);
+    List<Tarefa> findByProjetoIdAndStatus(UUID projetoId, Status status);
     /*
       pelo que eu entendi o Spring Data JPA é inteligente. Ao ler um método
       chamado findByProjetoId, ele automaticamente entende que deve

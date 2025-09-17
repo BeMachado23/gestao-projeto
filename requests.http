@@ -44,3 +44,34 @@ GET http://localhost:8080/projeto
 
 ### 6. Listar as tarefas de um projeto especifico
 GET http://localhost:8080/projeto/{{projetoId}}/tarefa
+
+### 7. Criar uma entrega para a tarefa
+POST http://localhost:8080/entrega
+Content-Type: application/json
+
+{
+  "url": "https://github.com/seu-usuario/seu-repo/pull/1",
+  "tarefaId": "{{tarefaId}}",
+  "alunoId": "{{alunoId}}"
+}
+> {% client.global.set("entregaId", response.body.id); %}
+
+### 8. Listar entregas de tarefas especificas
+GET http://localhost:8080/entrega?tarefaId={{tarefaId}}
+
+### 9. Avaliar entrega
+PATCH http://localhost:8080/entrega/{{entregaId}}/avaliar
+Content-Type: application/json
+
+{
+  "nota": 9
+}
+
+### 10. Remover aluno de um projeto
+DELETE http://localhost:8080/projeto/{{projetoId}}/alunos/{{alunoId}}
+
+### 11. Listar tarefas com filtro (só TODO)
+GET http://localhost:8080/projeto/{{projetoId}}/tarefa?status=TODO
+
+### 12. Listar tarefas com filtro (só DONE)
+GET http://localhost:8080/projeto/{{projetoId}}/tarefa?status=DONE

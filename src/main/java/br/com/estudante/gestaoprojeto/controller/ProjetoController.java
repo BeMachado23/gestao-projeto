@@ -3,6 +3,7 @@ package br.com.estudante.gestaoprojeto.controller;
 
 import br.com.estudante.gestaoprojeto.model.Aluno;
 import br.com.estudante.gestaoprojeto.model.Projeto;
+import br.com.estudante.gestaoprojeto.model.Status;
 import br.com.estudante.gestaoprojeto.model.Tarefa;
 import br.com.estudante.gestaoprojeto.repository.AlunoRepository;
 import br.com.estudante.gestaoprojeto.repository.ProjetoRepository;
@@ -67,7 +68,22 @@ public class ProjetoController {
         return ResponseEntity.status(201).body(novaTarefa);
     }
     @GetMapping("/{projetoId}/tarefa")
-    public List<Tarefa> listarTarefasDoProjeto(@PathVariable UUID projetoId){
+    public List<Tarefa> listarTarefasDoProjeto(@PathVariable UUID projetoId, @RequestParam(required = false) Status status){
+
+        if (status != null){
+            return tarefaRepository.findByProjetoIdAndStatus(projetoId, status);
+        }
         return tarefaRepository.findByProjetoId(projetoId);
+    }
+    @DeleteMapping("{projetoId}/alunos/{alunoId}")
+    public ResponseEntity<Void> deletarProjeto(@PathVariable UUID projetoId, @PathVariable UUID alunoId){
+        Projeto projeto = projetoRepository.findById(projetoId).orElseThrow(() -> new RuntimeException("Projeto não encontrado"));
+        boolean removido = projeto.getAlunos().removeIf(aluno -> aluno.getId().equals(alunoId));
+
+        if (!removido){
+            throw new RuntimeException("Aluno não encontrado");
+        }
+        projetoRepository.save(projeto);
+        return ResponseEntity.noContent().build();
     }
 }
